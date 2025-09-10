@@ -13,19 +13,18 @@ grid background ( ): # */
   font-style: normal;
 }
 
-.inconsolata-<uniquifier> {
+.inconsolata-stylish-heading {
   font-family: "Inconsolata", monospace;
   font-optical-sizing: auto;
-  font-weight: <weight>;
+  font-weight: 400;
   font-style: normal;
-  font-variation-settings:
-    "width" 100;
+  font-variation-settings: "wdth" 100;
 }
 
-.karla-<uniquifier> {
+.karla-stylish-text {
   font-family: "Karla", sans-serif;
   font-optical-sizing: auto;
-  font-weight: <weight>;
+  font-weight: 400;
   font-style: normal;
 }
 
@@ -41,6 +40,7 @@ body {
   font-weight: 400;
   line-height: 1.6;
   margin: 2rem 3rem;
+}
 
 h1, h2, h3, h4 {
   color: #444746;
@@ -64,6 +64,7 @@ h3 {
 h4 {
   font-size: 1.6rem;
   font-weight: 400;
+
 }
 /* a {
   color: #444746;
@@ -80,22 +81,6 @@ h4 {
   padding: 1em;
   border-bottom: 2em solid #fff;
 }
-
-/* .logo-heading {
-  display: flex;
-  align-items: center;
-  gap: 30px;
-  min-width: 300px;
-  flex-shrink: 0;
-} */
-
-/* .logo {
-  display: flex;
-  max-width: 10.4vw;
-  min-width: 9.8vw;
-  height: auto;
-  flex-shrink: 0;
-} */
 
 h1.heading {
   font-family: "Fugaz One", sans-serif;  
