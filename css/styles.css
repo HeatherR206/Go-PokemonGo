@@ -1,52 +1,61 @@
 /* Text color (dk grey): #444746   
-Background color (lt beige): #ede9d0 or #fff4ef
-Primary color (red): #d93025
-Secondary color (aqua): #54bac3
-Accent color 1 - hover & focus, header border (dk teal): #00525c  
-Accent color 2 - (lt red)#ff7259
+Background color (lt beige): #92d1b3 or #ede9d0 or #fff4ef
+Primary color (red): #49896f
+Secondary color (aqua):  #bd92af or #54bac3 or #89c893
+Accent color 1 - hover & focus, header border (dk teal): #49896f or  #00525c  or #d93025
+Accent color 2 - (lt red) #b74555 or #ff7259
 Logo background color (): 
 grid background ( ): # */
+:root {
+  --font-body: "Karla", ui-sans-serif, system-ui, sans-serif;
+  --font-header: "Fugaz One", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Inconsolata", ui-monospace, SFMono-Regular, monospace;
+}
 
-.fugaz-one-regular {
-  font-family: "Fugaz One", sans-serif;
+html {
+  font-family: var(--font-body);
+  font-size: 24px;
+  line-height: 1.5;
   font-weight: 400;
   font-style: normal;
 }
 
-.inconsolata-stylish-heading {
-  font-family: "Inconsolata", monospace;
-  font-optical-sizing: auto;
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  color: #444746;
   font-weight: 400;
   font-style: normal;
   font-variation-settings: "wdth" 100;
 }
 
-.karla-stylish-text {
-  font-family: "Karla", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
+@supports (font-optical-sizing: auto) {
+  html, h1, h2, h3, h4, h5, h6 {
+    font-optical-sizing: auto;
+  }
 }
 
 * {
   box-sizing: border-box;
 }
 
-body {
-  background-color: #ede9d0;
-  font-family: "Karla", sans-serif;
-  color: #444746;
-  font-size: 24px;
-  font-weight: 400;
-  line-height: 1.6;
-  margin: 2rem 3rem;
+.font-header {
+  font-family: var(--font-header);
+  font-optical-sizing: auto;
 }
 
-h1, h2, h3, h4 {
-  color: #444746;
-  font-family: "Inconsolata", monospace;
-  font-weight: 400;
-  text-align: left;
+.font-body {
+  font-family: var(--font-body);
+}
+
+.font-heading {
+  font-family: var(--font-heading);
+  font-optical-sizing: auto;
+  font-weight: 500;
+}
+
+body {
+  background-color: #92d1b3;
+  margin: 2rem 3rem;
 }
 
 h1 {
@@ -57,13 +66,12 @@ h2 {
   font-size: 3rem;
 }
 
-h3 {
+h3, h4 {
   font-size: 2rem;
 }
 
-h4 {
+h5, h6 {
   font-size: 1.6rem;
-  font-weight: 400;
 
 }
 /* a {
@@ -72,9 +80,9 @@ h4 {
 } */
 
 .page-header {
-  font-family: "Karla", sans-serif;
+  font-family: var(--font-body);
   display: flex;
-  background-color: #ff7259;
+  background-color: #d93025;
   justify-content: space-between;
   align-items: center;
   text-align: center;
@@ -82,11 +90,14 @@ h4 {
   border-bottom: 2em solid #fff;
 }
 
-h1.heading {
-  font-family: "Fugaz One", sans-serif;  
+h1.heading { 
+  font-family: var(--font-header);
   color: #fff; 
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
   margin: 0 auto;
+}
+.page-footer {
+  
 }
