@@ -1,4 +1,4 @@
-let pokemon = [
+let pokemonList= [
   {
     name: 'Bulbasaur',
     height: 2,
@@ -33,13 +33,14 @@ let pokemon = [
     types: ['normal']
   }
 ];
+function listPokemonAndProperties(pokemon) {
+  pokemon.forEach(pokemon => {
+    const pokemonProperties = Object.entries(pokemon);
 
-for (let i = 0; i < pokemon.length; i++) { 
-  //height value greater than 20 designates a special Pokemon
-  if (pokemon[i].height > 20) { 
-  //<p> used to assign each Pokemon it's own line
-  document.write('<p>',pokemon[i].name + ' (height: ' + pokemon[i].height,')' + ' - Wow, that\'s big!</p>');  
-  } else {
-  document.write('<p>',pokemon[i].name + ' (height: ' + pokemon[i].height,')</p>');
-  } 
+    pokemonProperties.forEach(([key, value]) => {
+      console.log(`${key}: ${value}`);
+    });
+    console.log('---------------------');
+  });
 }
+listPokemonAndProperties(pokemonList);
