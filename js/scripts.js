@@ -43,6 +43,9 @@ let pokemonRepository = (function () {  // IIFE function block
   function getAll() {
     return pokemonList;
   }
+  function showDetails(pokemon) {
+    console.log(pokemon);
+  }
 
   function addListItem(pokemon) { 
     let pokemonList = document.querySelector('.pokemon-list'); // generate unordered list of pokemon objects
@@ -52,6 +55,9 @@ let pokemonRepository = (function () {  // IIFE function block
     button.classList.add('button-class'); // add a class 'pokemon-name' to the button 
     listPokemon.appendChild(button); // append the button to list item
     pokemonList.appendChild(listPokemon); // append the list item to the (<ul>) in HTML
+    button.addEventListener('click', function () { // generate Pokemon object keys when button is clicked
+      showDetails(pokemon);
+    });
   }  
 
   return {
