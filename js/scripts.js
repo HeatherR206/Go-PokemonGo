@@ -3,17 +3,17 @@ let pokemonRepository = (function () { // IIFE function block
   let pokemonList= [];
   let apiUrl = 'https://pokeapi.co/api/v2/pokemon/?limit=150';
   
-  function showLoadingMessage() { // Function to show the loading message
-    let loadingMessage = document.createElement('div');
-    loadingMessage.id = 'loading-message';
-    loadingMessage.innerText = 'Loading...';
-    document.body.appendChild(loadingMessage);
+  function showLoadingMessage() { // Function to show the loading message 
+    let loadingMessage = document.querySelector("#loading-message");
+    if (loadingMessage) {
+      loadingMessage.style.display = "block";
+    }
   }
 
   function hideLoadingMessage() { // Function to hide the loading message
-    let loadingMessage = document.querySelector('#loading-message');
+    let loadingMessage = document.querySelector("#loading-message");
     if (loadingMessage) {
-      loadingMessage.remove();
+      loadingMessage.style.display = "none";
     }
   }
 
