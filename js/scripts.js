@@ -41,6 +41,8 @@ let pokemonRepository = (function () { // IIFE function block
     let listContainer = document.querySelector('.pokemon-list'); // generate unordered list of pokemon objects
     let listPokemon = document.createElement('li'); // create a new list item (<li>) for each pokemon
     let button = document.createElement('button'); // create a button for each pokemon in the list
+    button.setAttribute('data-bs-toggle', 'modal');
+    button.setAttribute('data-bs-target', '#pokemonModal');
     button.innerText = pokemon.name; // set the button's innerText to pokemon's name 
 
     listPokemon.classList.add('list-group-item'); // add Bootstrap class to li elements
@@ -121,10 +123,6 @@ let pokemonRepository = (function () { // IIFE function block
     // Append elements to the modal-body
     modalBody.appendChild(imageElement);
     modalBody.appendChild(contentElement);
-
-    // Display the Bootstrap Modal
-    const pokemonModal = new bootstrap.Modal(modalElement);
-    pokemonModal.show(); 
   }
   
   function showDetails(pokemon) {
