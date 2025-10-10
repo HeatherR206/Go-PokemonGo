@@ -1,18 +1,20 @@
-let pokemonRepository = (function () { // IIFE function block
+let pokemonRepository = (function () { 
   
   let pokemonList= [];
-  let apiUrl = 'https://pokeapi.co/api/v2/pokemon/?limit=150';
+  let apiUrl = 'https://pokeapi.co/api/v2/pokemon/?limit=150'; let imageUrl = 'https://github.com/PokeAPI/sprites.git';
   
   // --- Helper Functions (Loading/Utility) ---
 
-  function showLoadingMessage() { // Function to show the loading message 
+  // Function to show the loading message
+  function showLoadingMessage() { 
     let loadingMessage = document.querySelector("#loading-message");
     if (loadingMessage) {
       loadingMessage.style.display = "block";
     }
   }
 
-  function hideLoadingMessage() { // Function to hide the loading message
+  // Function to hide the loading message
+  function hideLoadingMessage() {
     let loadingMessage = document.querySelector("#loading-message");
     if (loadingMessage) {
       loadingMessage.style.display = "none";
@@ -37,27 +39,64 @@ let pokemonRepository = (function () { // IIFE function block
 
   // --- UI Functions (List items) ---
 
-  function addListItem(pokemon) { 
-    let listContainer = document.querySelector('.pokemon-list'); // generate unordered list of pokemon objects
-    let listPokemon = document.createElement('li'); // create a new list item (<li>) for each pokemon
-    let button = document.createElement('button'); // create a button for each pokemon in the list
-    button.setAttribute('data-bs-toggle', 'modal');
-    button.setAttribute('data-bs-target', '#pokemonModal');
-    button.innerText = pokemon.name; // set the button's innerText to pokemon's name 
+  // Select the new `.row` container
+  async function addListItem(pokemon) { 
 
-    listPokemon.classList.add('list-group-item'); // add Bootstrap class to li elements
-    listPokemon.appendChild(button); // append the button to list item
-    listContainer.appendChild(listPokemon); // append the list item to the (<ul>) in HTML
+    // Fetch details FIRST to get the 'id' and 'imageUrl' before rendering the card
+    await loadDetails(pokemon);
+    let listContainer = document.querySelector('.pokemon-list'); 
+
+    // Create new column div (grid item) to hold each Pokemon card
+    let colDiv = document.createElement('div');
+
+    // Bootstrap Grid classes: 4 columns on large/medium screens, and stacked on small screens
+    colDiv.classList.add('col-12', 'col-sm-6', 'col-md-6', 'col-lg-4', 'mb-4');
     
-    button.addEventListener('click', function() { // Calls the details before showing modal-dialog using Bootstrap button classes
-      showDetails(pokemon);
+    // Helper function to format the ID for Pokemon number
+    const formatId = (id) => `#${String(id).padStart(3, '0')}`;
+
+    // --- HTML template string for the Card Structure and Content using utility classes ---
+    const cardHtml = `
+      <div class="pokemon-card text-center shadow-sm h-100 p-2">
+        <h5 class="card-title text-capitalize mt-2">${formatId(pokemon.id)} ${pokemon.name}</h5>
+        <img class="card-img-top mx-auto d-block pokemon-image" src="${pokemon.imageUrl}" alt="Image of ${pokemon.name}">
+        <button class="btn btn-custom-style rounded-pill mx-auto see-details-btn">Details
+        </button>
+      </div>
+    `;
+    
+
+    // Insert the card HTML structure into the column div
+    colDiv.innerHTML = cardHtml;
+    
+    // Append the column div to the row container
+    listContainer.appendChild(colDiv);
+
+    // --- Logic to fetch image and append event listener to button ---
+
+    // Fetch and set the Pokemon image source
+    loadDetails(pokemon).then(() => {
+      const imageElement = colDiv.querySelector('.pokemon-image');
+
+      // Find the image element inside the new colDiv
+      if (imageElement) {
+        imageElement.src = pokemon.imageUrl;
+      }
+    });
+    
+      // Attach event listener to the button 
+      const button = colDiv.querySelector('.see-details-btn');
+
+      // Calls the details before showing modal-dialog using Bootstrap button classes
+      button.addEventListener('click', function() {
+        showDetails(pokemon);
     });
   }
 
   // --- Data Fetching Functions ---
 
   function loadList() {
-    showLoadingMessage(); // Show message at the start of fetch
+    showLoadingMessage(); 
     return fetch(apiUrl).then(function (response) {
       return response.json();
     }).then(function(json) {
@@ -68,30 +107,43 @@ let pokemonRepository = (function () { // IIFE function block
         };
         add(pokemon);
       });
-      hideLoadingMessage(); // Hide message on successful fetch
+
+      // Hide message on successful fetch
+      hideLoadingMessage();
     }).catch(function(e) {
-      hideLoadingMessage(); // Hide message on error
+      hideLoadingMessage();
       console.error('Error fetching list: ', e);
-    })
+    });
   }
 
-  function loadDetails(item) {
-    showLoadingMessage(); // Show message at the start of fetch
-    let url = item.detailsUrl;
-    return fetch(url).then(function(response) {
+  function loadDetails(pokemon) {
+    showLoadingMessage(); 
+    return fetch(pokemon.detailsUrl)
+    .then(function(response) {
       return response.json();
-    }).then(function(details) { // Now add the details to the item  
-      item.imageUrl = details.sprites.front_default;
-      item.height = details.height;
+    })
+    .then(function(details) {  
+      pokemon.id = details.id;
+      pokemon.height = details.height;
+      pokemon.weight = details.weight;
       // Map Pokemon types to a readable string
-      item.types = details.types.map(type => type.type.name).join(', ');
-      // Map Pokemon types to a readable string
-      item.abilities = details.abilities.map(ability => ability.ability.name).join(', ');
+      pokemon.types = details.types.map(type => type.type.name).join(', ');
+      // Map Pokemon abilities to a readable string
+      pokemon.abilities = details.abilities.map(ability => ability.ability.name).join(', ');
       
-      hideLoadingMessage(); // Hide message on successful fetch
+      // Target the high-resoltion official artwork 
+      if (details.sprites.other && details.sprites.other['official-artwork']) {
+        pokemon.imageUrl = details.sprites.other['official-artwork'].front_default;
+      } else {
+        // Fallback to standard (low-res) sprite if offical artwork is missing
+        pokemon.imageUrl = details.sprites.front_default;
+      }
+
+      // Hide message on successful fetch
+      hideLoadingMessage();
     }).catch(function(e) {
       console.error('Error fetching details: ', e);
-      hideLoadingMessage(); // Hide message on error
+      hideLoadingMessage();
     });
   }
 
@@ -103,19 +155,29 @@ let pokemonRepository = (function () { // IIFE function block
     const modalBody = modalElement.querySelector('.modal-body');
     modalBody.innerHTML = '';
 
+    // Helper function to format the ID for Pokemon number (consistent with addListItem)
+    const formatId = (id) => `#${String(id).padStart(3, '0')}`;
+    
     // Set Dialog Title
-    modalTitle.textContent = pokemon.name;
+    // Replace hyphens with spaces for readability
+    const displayName = pokemon.name.replace(/-/g, ' ');
+    modalTitle.textContent = `${formatId(pokemon.id)} ${displayName}`;
+    modalTitle.classList.add('text-capitalize');
 
     // Create and append Modal Image element
     let imageElement = document.createElement('img');
     imageElement.src = pokemon.imageUrl;
     imageElement.alt = 'Image of ' + pokemon.name;
-    imageElement.classList.add('img-fluid', 'mb-3'); // Bootstrap classes for responsive image
+
+    // Bootstrap classes for a larger, responsive image than default
+    imageElement.classList.add('img-fluid', 'mb-3', 'modal-pokemon-image', 'mx-auto');
 
     // Create and append Modal Content element 
     const contentElement = document.createElement('p');
+    contentElement.classList.add('modal-text', 'mb-3');
     contentElement.innerHTML = `
       <strong>Height:</strong> ${pokemon.height / 10} m <br>
+      <strong>Weight:</strong> ${pokemon.weight / 10} kg <br>
       <strong>Types:</strong> ${pokemon.types} <br>
       <strong>Abilities:</strong> ${pokemon.abilities}
     `;
@@ -123,8 +185,13 @@ let pokemonRepository = (function () { // IIFE function block
     // Append elements to the modal-body
     modalBody.appendChild(imageElement);
     modalBody.appendChild(contentElement);
-  }
   
+    // Manually initialize and show the modal after loading details
+    const pokemonModal = new bootstrap.Modal(modalElement);
+    pokemonModal.show();
+  }
+
+  // Fetches details and shows the dialog one last time, if needed
   function showDetails(pokemon) {
     loadDetails(pokemon).then(function() {
       showDialog(pokemon);
@@ -139,11 +206,14 @@ let pokemonRepository = (function () { // IIFE function block
     loadList: loadList,
     loadDetails: loadDetails,
     showDetails: showDetails
-  };    
+  }    
 })(); 
 
-pokemonRepository.loadList().then(function() { // Now the data is loaded!
-  pokemonRepository.getAll().forEach(function (pokemon) { 
-    pokemonRepository.addListItem(pokemon); // IIFE variable calls 'addListItem' fn
+// Initiate the loading and rendering process
+pokemonRepository.loadList().then(function() {
+  pokemonRepository.getAll().forEach(function(pokemon) {
+
+    // IIFE variable calls 'addListItem' fn
+    pokemonRepository.addListItem(pokemon);
   }); 
 });
