@@ -35,6 +35,7 @@ Tools & Libraries
 - Interactivity: Click on a Pokémon card to view Pokémon details in a Bootstrap modal.
 - Responsive Layout: Uses Bootstrap’s grid system for consistent layout across devices.
 - Loading Indicator: Shows a loading message while fetching data asynchronously.
+- Adaptive interface for screen-readers.
 - Custom UI Enhancements:
     - Pokemon cards and buttons have distinct hovering animation.
     - App is styled with custom colors and fonts.
