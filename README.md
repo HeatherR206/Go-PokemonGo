@@ -46,4 +46,6 @@ Prerequisites
 -Modern web browser (Chrome, Firefox, Edge, Safari)
 -Internet connection to fetch data and load CDNs
 
-git clone at https://github.com/HeatherR206/Go-PokemonGo.git
+clone repo at https://github.com/HeatherR206/Go-PokemonGo.git
+
+live site: https://heatherr206.github.io/Go-PokemonGo/
